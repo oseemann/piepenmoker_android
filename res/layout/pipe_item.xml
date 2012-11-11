@@ -8,7 +8,8 @@
         android:id="@+id/pipeTeaser"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_margin="4dip"/>
+        android:layout_margin="4dip"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/pipePrice"
@@ -19,7 +20,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:singleLine="true"
-        
+        android:visibility="invisible"
         android:text="Price"
         android:textStyle="bold"/>
 
@@ -27,12 +28,10 @@
         android:id="@+id/pipeName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        
-       android:layout_toRightOf="@id/pipeTeaser"
+        android:layout_toRightOf="@id/pipeTeaser"
+        android:visibility="invisible"
+        android:text="Name" />
 
-	    android:text="Name"/>
-    
 </RelativeLayout>

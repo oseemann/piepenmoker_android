@@ -1,5 +1,10 @@
 package de.piepenmoker.app;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,16 +25,30 @@ public class PipeLoadingTask extends AsyncTask<Void, Void, JSONObject[]> {
     }
 
     protected JSONObject[] doInBackground(Void... nothing) {
-
-        String json = "[{\"price\": 140, \"name\": \"PM-121005-b\", \"teaser\":\"http://www.piepenmoker.de/static/images/pipes/421/teaser/3322.jpg\"}, "
-                +"{\"price\": 120, \"name\":\"PM-120821-ax\", \"teaser\": \"http://www.piepenmoker.de/static/images/pipes/390/teaser/3071.jpg\"}]";
-
+        String url = "http://oebs.net/pipes.json";
         JSONObject[] pipes = null;
+        String jsonBuf = null;
+
         try {
-            JSONArray arr = (JSONArray) new JSONTokener(json).nextValue();
+            InputStream in = null;
+            in = new java.net.URL(url).openStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder b = new StringBuilder();
+
+            for (String line = null; (line = reader.readLine()) != null;) {
+                b.append(line).append("\n");
+            }
+            jsonBuf = b.toString();
+        } catch (IOException e) {
+
+        }
+
+        try {
+            JSONArray arr = (JSONArray) new JSONTokener(jsonBuf).nextValue();
             pipes = new JSONObject[arr.length()];
-            pipes[0] = (JSONObject)arr.get(0);
-            pipes[1] = (JSONObject)arr.get(1);
+            for (int i = 0; i < arr.length(); i++) {
+                pipes[i] = (JSONObject)arr.get(i);
+            }
         } catch (JSONException e) {
 
         }

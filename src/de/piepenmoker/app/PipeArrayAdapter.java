@@ -37,10 +37,10 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
+        ViewHolder holder;
 
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
+        public DownloadImageTask(ViewHolder holder) {
+            this.holder = holder;
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -57,9 +57,13 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            holder.name.setVisibility(android.view.View.VISIBLE);
+            holder.price.setVisibility(android.view.View.VISIBLE);
+            holder.teaser.setVisibility(android.view.View.VISIBLE);
+            holder.teaser.setImageBitmap(result);
         }
-    } 
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -84,10 +88,10 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
         try {
             holder.name.setText(pipe.getString("name"));
             holder.price.setText(pipe.getString("price") + " EUR");
+            String url = "http://www.piepenmoker.de" + 
+                    pipe.getJSONObject("image").get("teaser");
 
-            String url = pipe.getString("teaser");
-            View target = convertView.findViewById(R.id.pipeTeaser);
-            new DownloadImageTask((ImageView)target).execute(url);
+            new DownloadImageTask(holder).execute(url);
 
         } catch (JSONException e) {
 
