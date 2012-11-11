@@ -44,12 +44,7 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        JSONObject[] pipes = getPipes();
-
-        PipeArrayAdapter adapter = new PipeArrayAdapter(this,
-                android.R.layout.simple_list_item_1, pipes);
-
         ListView pipelist = (ListView) findViewById(R.id.mainPipeList);
-        pipelist.setAdapter(adapter);
+        new PipeLoadingTask(this, pipelist).execute();
     }
 }
