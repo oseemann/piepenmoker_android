@@ -9,18 +9,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.ListView;
 
 public class PipeLoadingTask extends AsyncTask<Void, Void, Pipe[]> {
 
     ListView pipelist = null;
-    Context context = null;
+    MainActivity activity;
 
-    public PipeLoadingTask(Context context, ListView pipelist) {
-        this.context = context;
-        this.pipelist = pipelist;
+    public PipeLoadingTask(MainActivity activity) {
+        this.activity = activity;
     }
 
     protected Pipe[] doInBackground(Void... nothing) {
@@ -56,9 +54,6 @@ public class PipeLoadingTask extends AsyncTask<Void, Void, Pipe[]> {
     }
 
     protected void onPostExecute(Pipe[] pipes) {
-        PipeArrayAdapter adapter = new PipeArrayAdapter(this.context,
-                android.R.layout.simple_list_item_1, pipes);
-
-        this.pipelist.setAdapter(adapter);
+        this.activity.displayPipeList(pipes);
     }
 }

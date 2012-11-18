@@ -6,5 +6,6 @@
     <string name="edit_message">Enter a message</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_display_message">DisplayMessageActivity</string>
+    <string name="title_activity_display_pipe">Display Pipe</string>
 
 </resources>

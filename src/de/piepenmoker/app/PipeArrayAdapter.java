@@ -85,9 +85,13 @@ public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
         holder.name.setText(pipe.name);
         holder.price.setText(pipe.price.toString() + " EUR");
 
-        new DownloadImageTask(holder).execute(pipe.image.teaser);
-        return convertView;
+        // Use the pipe object as tag so we can refer to it in the click
+        // handler.
+        convertView.setTag(pipe);
 
-	}
+        new DownloadImageTask(holder).execute(pipe.image.teaser);
+
+        return convertView;
+    }
 }
 
