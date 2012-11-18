@@ -1,9 +1,7 @@
 package de.piepenmoker.app;
 
 import java.io.InputStream;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.net.URI;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,12 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
+public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
 
     private Context parentContext;
-    private JSONObject[] pipes;
+    private Pipe[] pipes;
 
-    public PipeArrayAdapter(Context context, int resid, JSONObject[] objects ) {
+    public PipeArrayAdapter(Context context, int resid, Pipe[] objects ) {
         super(context, resid, objects);
 
         this.parentContext = context;
@@ -36,18 +34,17 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
         TextView price;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadImageTask extends AsyncTask<URI, Void, Bitmap> {
         ViewHolder holder;
 
         public DownloadImageTask(ViewHolder holder) {
             this.holder = holder;
         }
 
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
+        protected Bitmap doInBackground(URI... uri) {
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
+                InputStream in = uri[0].toURL().openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
@@ -68,7 +65,7 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder = null;
-        JSONObject pipe = pipes[position];
+        Pipe pipe = pipes[position];
 
         LayoutInflater mInflater = (LayoutInflater)
                 this.parentContext.getSystemService(
@@ -85,17 +82,10 @@ public class PipeArrayAdapter extends ArrayAdapter<JSONObject> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        try {
-            holder.name.setText(pipe.getString("name"));
-            holder.price.setText(pipe.getString("price") + " EUR");
-            String url = "http://www.piepenmoker.de" + 
-                    pipe.getJSONObject("image").get("teaser");
+        holder.name.setText(pipe.name);
+        holder.price.setText(pipe.price.toString() + " EUR");
 
-            new DownloadImageTask(holder).execute(url);
-
-        } catch (JSONException e) {
-
-        }
+        new DownloadImageTask(holder).execute(pipe.image.teaser);
         return convertView;
 
 	}
