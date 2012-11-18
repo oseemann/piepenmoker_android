@@ -1,14 +1,8 @@
 package de.piepenmoker.app;
 
-import java.io.InputStream;
-import java.net.URI;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +15,7 @@ public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
     private Context parentContext;
     private Pipe[] pipes;
 
-    public PipeArrayAdapter(Context context, int resid, Pipe[] objects ) {
+    public PipeArrayAdapter(Context context, int resid, Pipe[] objects) {
         super(context, resid, objects);
 
         this.parentContext = context;
@@ -34,23 +28,12 @@ public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
         TextView price;
     }
 
-    private class DownloadImageTask extends AsyncTask<URI, Void, Bitmap> {
+    private class DownloadPipeTeaserTask extends DownloadImageTask {
         ViewHolder holder;
 
-        public DownloadImageTask(ViewHolder holder) {
+        public DownloadPipeTeaserTask(ViewHolder holder) {
+            super(parentContext);
             this.holder = holder;
-        }
-
-        protected Bitmap doInBackground(URI... uri) {
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = uri[0].toURL().openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
         }
 
         protected void onPostExecute(Bitmap result) {
@@ -67,16 +50,15 @@ public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
         ViewHolder holder = null;
         Pipe pipe = pipes[position];
 
-        LayoutInflater mInflater = (LayoutInflater)
-                this.parentContext.getSystemService(
-                        Activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) this.parentContext
+                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.pipe_item, null);
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.pipeName);
             holder.price = (TextView) convertView.findViewById(R.id.pipePrice);
-            holder.teaser = (ImageView) convertView.findViewById(
-                    R.id.pipeTeaser);
+            holder.teaser = (ImageView) convertView
+                    .findViewById(R.id.pipeTeaser);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -89,9 +71,8 @@ public class PipeArrayAdapter extends ArrayAdapter<Pipe> {
         // handler.
         convertView.setTag(pipe);
 
-        new DownloadImageTask(holder).execute(pipe.image.teaser);
+        new DownloadPipeTeaserTask(holder).execute(pipe.image.teaser);
 
         return convertView;
     }
 }
-
